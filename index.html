@@ -28,6 +28,50 @@
       <section id="main_content">
         <hr>
 
+<h3>
+<a id="i-wrote-a-lisp" class="anchor" href="#i-wrote-a-lisp" aria-hidden="true"><span class="octicon octicon-link"></span></a>I WROTE A LISP</h3>
+
+<p>A few weeks ago, i spent some time writing a Lisp in javascript. This was due to having enjoyed writing clojure and researching Lisps in general. I watched a few of the SICP lectures and online and read Peter Norvig's <a href="http://norvig.com/lispy.html">How to Write a Lisp Interpreter in Python</a> for pointers and went on my way.</p>
+
+<p>The lisp which I've imaginatively named Joelisp is a bit different to standard Lisps in terms of syntax as it inherits a lot of Clojure syntax and also uses <a href="https://github.com/swannodette/mori">mori's</a> data structures. </p>
+
+<p>It differs from most Lisps in that I have special semantics for evaluating code in depth first order. Code wrapped in an rx function will figure out the implicit dependency graph in your code and will run your code in topologically sorted order.</p>
+
+<p>This kind of feature would be useful for doing reactive programming as it ensures that the values in variables propagate through the whole program even after the variable is mutated. </p>
+
+<p>It also lets you make forward declarations on variables that don't exist yet which is pretty handy.</p>
+
+<p>An example use of the rx tag is</p>
+
+<pre><code>(rx 
+    (def c (+ a b))
+    (def d (* a b c))
+    (def b (+ a 1))
+    (def a 1)
+    (set! a 100)
+   )
+
+(print a)
+(print b)
+(print c)
+(print d)
+
+</code></pre>
+
+<p>returns you </p>
+
+<pre><code>100
+101
+201
+2030100
+</code></pre>
+
+<p>pretty cool huh!</p>
+
+<hr>
+
+<hr>
+
 <pre><code>$ say "why joe???"
 </code></pre>
 
