@@ -28,6 +28,93 @@
       <section id="main_content">
         <hr>
 
+<pre><code>var l = function(){
+    console.log.apply(null, ([].slice.call(arguments)))
+}
+
+var gen_id = function(){
+    return Date.now() + Math.random(Math.random() * 10000000);
+}
+
+
+function fibre(){
+
+    return {id: gen_id(), context: {}, active: false, body: null};
+}
+
+
+function lib_fibre(){
+    var fibre_q = {};
+
+
+    return{
+        gen_id : function(){
+            return Math.floor(Math.random() * 10000000);
+        },
+        spawn: function(fn){
+            _f = fibre();
+            _f.body = fn();
+            fibre_q[_f.id] = _f;
+        },
+
+        go: function(){
+            while (Object.keys(fibre_q).length &gt; 0){
+                //l(fibre_q);
+                for(var v in fibre_q){
+                    //l(v , fibre_q[v] );
+                    var fn = fibre_q[v].body;
+                    //l(fn);
+                    var ref = fn.next();
+                    //l(ref);
+
+                    if(ref.done){ 
+                        //l("in delete"); 
+                        delete fibre_q[v];
+                    }
+                    //fibre_q[v].body = fn.next;
+
+                }
+            } 
+        },
+    };
+}
+
+
+var lf = lib_fibre();
+
+var a = function *(){
+    yield l("Hi");
+    yield l("Joe");
+    yield l("Welcome");
+    yield l("!!!!!!");
+}
+var b = function *(){
+    var x = 10;
+
+    while (x &gt; 0){
+        yield l(x);
+        x -= 1;
+    }
+}
+var c = function *(){
+    yield l("END");
+}
+
+lf.spawn(c);
+
+lf.spawn(a);
+
+lf.spawn(b);
+lf.go();
+
+
+
+</code></pre>
+
+<hr>
+
+<hr>
+
 <h3>
 <a id="i-wrote-a-lisp" class="anchor" href="#i-wrote-a-lisp" aria-hidden="true"><span class="octicon octicon-link"></span></a>I WROTE A LISP</h3>
 
