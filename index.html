@@ -29,6 +29,103 @@
         <hr>
 
 <h3>
+<a id="pattern-matching-on-arrays-in-javascript" class="anchor" href="#pattern-matching-on-arrays-in-javascript" aria-hidden="true"><span class="octicon octicon-link"></span></a>Pattern Matching on Arrays in Javascript</h3>
+
+<pre><code>/**  pattern matching on arrays in js 
+ *  by Joe Attueyi  */
+
+var assert = require("assert");
+
+/* a few helper functions */
+var typeString = function(x){
+    return Object.prototype.toString.call(x) ;
+}
+
+var isObj = function(x){
+    return typeString(x)  === "[object Object]";
+}
+
+var isArray = function(x){
+    return typeString(x)  === "[object Array]";
+}
+var matchAtom = function(l1, l2){
+    return l1 === l2 || typeof(l1) === "undefined"|| typeof(l2) === "undefined";
+}
+
+var isAtom = function(l){
+    if (typeof(l) === "string" ||
+            typeof(l) === "number" ||
+            typeof(l) === "undefined" ||
+            typeof(l) === "boolean"){
+        return true;
+    }else{ false; }
+}
+
+/* check if 2 arrays match */
+
+var match = function(l1, l2){
+    if( isAtom(l1) || isAtom(l2) ){         
+        return  matchAtom(l1,l2);
+    }
+    else if( l1.length !== l2.length){ return false;
+    }
+    else if(isArray(l1) &amp;&amp; l1.length === 0 &amp;&amp; isArray(l2) &amp;&amp; l2.length === 0){
+        return true;
+    }
+    else if (l2.length !== 0  || l1.length !== 0){
+       return match(l1.slice(0,1)[0], l2.slice(0,1)[0]) &amp;&amp; match(l1.slice(1), l2.slice(1));
+    }
+}
+
+var getMatches = function(l, db){
+    var res = [];    
+    for(var i=0; i&lt;db.length; i++){
+        if(match(l, db[i])){
+            res.push(db[i]);
+        }
+    }
+     return res;
+}
+var _p;
+
+var db = [
+    [["lovelace", "ada"], 50000, 1234],
+    [["turing", "alan"], 45000, 3927],
+    [["shelley", "mary"], 3500, 2850],
+    [["vonNeumann", "john"], 40000, 7955],
+    [["simon", "herbert"], 50000, 1374],
+    [["mccarthy", "john"], 48000, 2864],
+    [["russell", "bertrand"], 35000, 2950]];
+
+console.log( getMatches([["turing", "alan"], 45000, 3927], db));
+
+console.log( getMatches([_p, 50000, _p], db) );
+
+console.log( getMatches([[_p, "john"], _p, _p], db));
+
+
+
+assert( match(["likes", "bill", "wine"], ["likes", "bill", "wine"]) == true);
+
+assert( match(["likes", "bill", "wine"], ["likes", "bill", "milk"]) == false);
+
+var _a;
+assert( match(["likes", "bill", _a], ["likes", "bill", "wine"]) == true);
+assert( match(["likes", _a, "wine"], ["likes", "bill", _a]) == true);
+
+assert( match(["likes", "bill", _a], ["likes", "bill", ["prolog", "lisp", "smalltalk"]]) == true)
+
+assert( match(["likes", _a], ["likes", "bill", "wine"]) == false );
+
+
+
+</code></pre>
+
+<hr>
+
+<hr>
+
+<h3>
 <a id="a-very-basic-fibres-implementation-in-javascript-using-generators" class="anchor" href="#a-very-basic-fibres-implementation-in-javascript-using-generators" aria-hidden="true"><span class="octicon octicon-link"></span></a>A Very Basic Fibres Implementation in Javascript Using Generators</h3>
 
 <p>I've been playing around with concurrency models in different languages and have quite enjoyed learning
