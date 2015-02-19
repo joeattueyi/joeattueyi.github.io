@@ -28,16 +28,23 @@
       <section id="main_content">
         <hr>
 
-<pre><code>var l = function(){
-    console.log.apply(null, ([].slice.call(arguments)))
-}
+<h3>
+<a id="a-very-basic-fibres-implementation-in-javascript-using-generators" class="anchor" href="#a-very-basic-fibres-implementation-in-javascript-using-generators" aria-hidden="true"><span class="octicon octicon-link"></span></a>A Very Basic Fibres Implementation in Javascript Using Generators</h3>
 
-var gen_id = function(){
-    return Date.now() + Math.random(Math.random() * 10000000);
-}
+<p>I've been playing around with concurrency models in different languages and have quite enjoyed learning
+about them.</p>
 
+<p>For my money the CSP derived ones in ML,Clojure and Go seem to me to be the most flexible 
+and allow for you to build higher abstractions on top of them. I think Rich Hickey has it right, 
+when he talks about the splitting of conveyance and execution being beneficial.</p>
 
-function fibre(){
+<p>Anyways here is a hacky first attempt at a form of concurrency in javascript.
+Im using generators so that my functions can park and unpark their execution and context, this coupled with a 
+run loop allows one to simulate concurrently executing functions in javascript</p>
+
+<p>Here is the implementation.</p>
+
+<pre><code>function fibre(){
 
     return {id: gen_id(), context: {}, active: false, body: null};
 }
@@ -80,7 +87,11 @@ function lib_fibre(){
 }
 
 
-var lf = lib_fibre();
+</code></pre>
+
+<p>And here is the implementation in action.</p>
+
+<pre><code>var lf = lib_fibre();
 
 var a = function *(){
     yield l("Hi");
@@ -106,10 +117,11 @@ lf.spawn(a);
 
 lf.spawn(b);
 lf.go();
-
-
-
 </code></pre>
+
+<p>Running this, you would see the interleaving of the functions. This is just a basic implementation, one 
+could easily couple these with queues independent of processes and you could start to emulate CSP.
+Thankfully, through the wonderful magic of open source someone has already done <a href="https://github.com/ubolonton/js-csp">this</a> for you :)</p>
 
 <hr>
 
